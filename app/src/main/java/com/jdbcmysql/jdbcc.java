@@ -19,19 +19,49 @@ public class jdbcc {
     private static final String pwd = "1234";
     private static Connection conn=null;
     private static PreparedStatement stmt=null;
-    public static List<String[]> getwords(int num) {
-        List<String[]> res = new ArrayList<>();
+    private static USER data  =null;
+    /**
+     * 连接数据库
+     * @return
+     */
+    public static Connection connection() {
+        Connection conn = null;
         try {
-            Class.forName(driver).newInstance();
-            System.out.println("驱动加载成功！！！！！");
-        }
-        catch (Exception e){
+            Class.forName(driver);  //加载数据库驱动
+            try {
+                conn = DriverManager.getConnection(url, user, pwd);  //连接数据库
+                System.out.println("数据库连接成功(*￣︶￣)");
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        try{
-            conn = DriverManager.getConnection(url,user,pwd);
-            System.out.println("连接数据库成功！！！！！！");
-            String sql="SELECT * FROM enwords  ORDER BY RAND() LIMIT "+Integer.toString(num);
+        return conn;
+    }
+    /**
+     * 关闭数据库链接
+     * @return
+     */
+    public static void close() {
+        if(conn != null) {
+            try {
+                conn.close();  //关闭数据库链接
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    /**
+     * 从数据库获得单词
+     * @return
+     */
+    public static List<String[]> getwords(int num) {
+        List<String[]> res = new ArrayList<>();
+        conn = connection();
+        String sql="SELECT * FROM enwords  ORDER BY RAND() LIMIT "+Integer.toString(num);
+        try {
             stmt = conn.prepareStatement(sql);
             System.out.println(sql);
             ResultSet rs = stmt.executeQuery();
@@ -46,58 +76,85 @@ public class jdbcc {
             e.printStackTrace();
         }
         finally {
-            if(conn!=null){
-                try {
-                    conn.close();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+            close();
         }
         return res;
     }
+    /**
+     * 登录
+     * @return
+     */
+    public static boolean login(String us,String pa) {
+        conn = connection();
+        boolean res = false;
 
-    public static boolean linkMysql(String us,String pa) {
-        boolean res=false;
         try {
-            Class.forName(driver).newInstance();
-            System.out.println("驱动加载成功！！！！！");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        try{
-            conn = DriverManager.getConnection(url,user,pwd);
-            System.out.println("连接数据库成功！！！！！！");
-            stmt = conn.prepareStatement("SELECT * FROM USER");
+
+            stmt = conn.prepareStatement("SELECT * FROM USER WHERE username = ? AND PASSWORD = ?");
+            stmt.setString(1,us);
+            stmt.setString(2,pa);
             ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
-                String id=rs.getString("username");
-                String pass=rs.getString("password");
-                if(pa.equals(pass)&&us.equals(id)){
-                    res=true;
-                    return true;
-                }
-                System.out.println(":"+id+":"+":"+pass+":");
+            if (rs.next()) {
+                String id = rs.getString("username");
+                String pass = rs.getString("password");
+                int gola = rs.getInt("goaldays");
+                int daily = rs.getInt("daily");
+                res = true;
+                System.out.println("登陆成功！~");
+                data=new USER(gola,daily,us,pass);
+                return true;
             }
-            return res;
+        }
+        catch(Exception e){
+                e.printStackTrace();
+        }
+        finally{
+                close();
+        }
+        return res;
+
+    }
+    /**
+     * 添加用户到数据库（注册）
+     * @return
+     */
+    public static boolean user_add(String us,String pa,String gola,String daily) {
+        boolean res=false;
+        try{
+            conn = connection();
+
+            stmt = conn.prepareStatement("SELECT * FROM USER WHERE username = ? ");
+            stmt.setString(1,us);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return false;// 用户名已存在时
+            }
+
+            String sql="INSERT INTO USER (username,PASSWORD,goaldays,daily) VALUES (?,?,?,?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1,us);
+            stmt.setString(2,pa);
+            stmt.setInt(3,Integer.valueOf(gola));
+            stmt.setInt(4,Integer.valueOf(daily));
+            stmt.executeUpdate();
+            System.out.println("注册成功(*￣︶￣)");
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         finally {
-            if(conn!=null){
-                try {
-                    conn.close();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+           close();
         }
         return  res;
     }
-
-
+    /**
+     * 返回用户数据
+     * @return
+     */
+    public USER getData(){
+        return this.data;
+    }
 
 
 }

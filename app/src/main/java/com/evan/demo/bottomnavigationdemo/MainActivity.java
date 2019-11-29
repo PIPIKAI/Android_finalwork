@@ -35,7 +35,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class MainActivity extends AppCompatActivity {
     private ResultSet rs=null;
-    private Button bt1;
+    private Button bt1,bt2;
     private TextView username,password;
     private Connection conn=null;
     private String us="";
@@ -46,9 +46,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login__main);
         bt1=(Button) super.findViewById(R.id.login_bt1);
+        bt2=(Button) super.findViewById(R.id.login_bt2);
         username=(TextView) super.findViewById(R.id.username);
         password= (TextView) super.findViewById(R.id.password);
         this.bt1.setOnClickListener(new OnClickListener1());
+        this.bt2.setOnClickListener(new OnClickListener2());
 
     }
     private class OnClickListener1 implements View.OnClickListener {
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
                     us=username.getText().toString();
                     pa=password.getText().toString();
-                    flag=jdbcc.linkMysql(us,pa);
+                    flag=jdbcc.login(us,pa);
                 }
             });
             t.start();
@@ -82,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
                 username.setText("");
             }
 
+        }
+    }
+    private class OnClickListener2 implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent it = new Intent(MainActivity.this, RegisterActivity.class);
+            MainActivity.this.startActivity(it);
         }
     }
     public void showMessage(String str){

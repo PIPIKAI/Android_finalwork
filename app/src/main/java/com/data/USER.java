@@ -1,28 +1,60 @@
 package com.data;
 
 public class USER {
-    private int id,gole,now;
+
+    private int gola,now;
     private String username;
     private String password;
-    USER(){
 
+    public USER() {
     }
-    USER(String username, String password){
-        this.id=0;
-        this.username=username;
-        this.password=password;
+
+    public USER(int gola, int now, String username, String password) {
+        this.gola = gola;
+        this.now = now;
+        this.username = username;
+        this.password = password;
     }
-    public void setcount(String id,String pass) {
-        this.username=id;
-        this.password = pass;
+
+    public int getGola() {
+        return gola;
     }
-    public void setGole(int gole){
-        this.gole=gole;
+
+    public void setGola(int gola) {
+        this.gola = gola;
     }
-    public String getPassword(){
-        return  this.password;
+
+    public int getNow() {
+        return now;
     }
-    public String getUsername(){
-        return  this.username;
+
+    public void setNow(int now) {
+        this.now = now;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "USER{" +
+                "gola=" + gola +
+                ", now=" + now +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

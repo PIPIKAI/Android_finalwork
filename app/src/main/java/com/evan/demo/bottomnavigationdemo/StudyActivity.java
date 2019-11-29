@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.data.USER;
 import com.jdbcmysql.jdbcc;
 
 import java.sql.Connection;
@@ -33,6 +34,7 @@ public class StudyActivity extends AppCompatActivity {
     private List<String[]> bk=null;
     private ProgressBar process =null;
     private int id=-1,finised=0,num=10;
+    private USER data=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +77,7 @@ public class StudyActivity extends AppCompatActivity {
         word.setText(bk.get(id)[0]);
         mean.setText(bk.get(id)[1]);
     }
-    private class OnClickListener1 implements View.OnClickListener {
+    protected class OnClickListener1 implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             ++finised;
