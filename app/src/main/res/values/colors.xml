@@ -6,7 +6,11 @@
 
 
     <color name="black_2c">#2c2c2c</color>
-    <color name="write">#ffffff</color>
-    <color name="theme">#03A9F4</color>
+    <color name="write">#FFFFFF</color>
+    <color name="theme">#2E8B57</color>
     <color name="bottom_navigation_normal">#CCCCCC</color>
+    <color name="color1">#4df0a5</color>
+    <color name="color2">#FF4500</color>
+    <color name="color3">#BAF2D6</color>
+    <color name="grave">#F5F5F5</color>
 </resources>

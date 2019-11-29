@@ -1,5 +1,6 @@
 package com.evan.demo.bottomnavigationdemo;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -7,92 +8,87 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+//import com.jdbcmysql.jdbcc;
+import com.data.USER;
 import com.evan.demo.bottomnavigationdemo.utils.BottomNavigationViewHelper;
+import com.jdbcmysql.jdbcc;
 
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 
-/**
- * @author Evan_zch
- */
 public class MainActivity extends AppCompatActivity {
-
-    private Toolbar mToolbar;
-    private BottomNavigationView mBottomNavigationView;
-
-    private int lastIndex;
-    List<Fragment> mFragments;
-
+    private ResultSet rs=null;
+    private Button bt1;
+    private TextView username,password;
+    private Connection conn=null;
+    private String us="";
+    private String pa= "";
+    boolean flag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initView();
-        initBottomNavigation();
-        initData();
+        setContentView(R.layout.activity_login__main);
+        bt1=(Button) super.findViewById(R.id.login_bt1);
+        username=(TextView) super.findViewById(R.id.username);
+        password= (TextView) super.findViewById(R.id.password);
+        this.bt1.setOnClickListener(new OnClickListener1());
 
     }
-
-    public void initView() {
-        mToolbar = findViewById(R.id.toolbar);
-
-    }
-
-    public void initData() {
-        setSupportActionBar(mToolbar);
-        mFragments = new ArrayList<>();
-        mFragments.add(new MessageFragment());
-        mFragments.add(new ContactsFragment());
-        mFragments.add(new DiscoverFragment());
-        mFragments.add(new AccountFragment());
-        // 初始化展示MessageFragment
-        setFragmentPosition(0);
-    }
-
-    public void initBottomNavigation() {
-        mBottomNavigationView = findViewById(R.id.bv_bottomNavigation);
-        // 解决当item大于三个时，非平均布局问题
-        BottomNavigationViewHelper.disableShiftMode(mBottomNavigationView);
-        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_message:
-                        setFragmentPosition(0);
-                        break;
-                    case R.id.menu_contacts:
-                        setFragmentPosition(1);
-                        break;
-                    case R.id.menu_discover:
-                        setFragmentPosition(2);
-                        break;
-                    case R.id.menu_me:
-                        setFragmentPosition(3);
-                        break;
-                    default:
-                        break;
+    private class OnClickListener1 implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+//            BlockingQueue queue = new ArrayBlockingQueue(1);//数组型队列，长度为1
+            Thread t =new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    us=username.getText().toString();
+                    pa=password.getText().toString();
+                    flag=jdbcc.linkMysql(us,pa);
                 }
-                // 这里注意返回true,否则点击失效
-                return true;
+            });
+            t.start();
+            // 子线程太慢了
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        });
-    }
+            if (flag) {
+                showMessage("登陆成功！");
+                Intent it = new Intent(MainActivity.this, MenuActivity.class);
+                MainActivity.this.finish();
+                MainActivity.this.startActivity(it);
+            }
+            else{
+                showMessage("账号或者密码错误！");
+                password.setText("");
+                username.setText("");
+            }
 
-
-    private void setFragmentPosition(int position) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment currentFragment = mFragments.get(position);
-        Fragment lastFragment = mFragments.get(lastIndex);
-        lastIndex = position;
-        ft.hide(lastFragment);
-        if (!currentFragment.isAdded()) {
-            getSupportFragmentManager().beginTransaction().remove(currentFragment).commit();
-            ft.add(R.id.ll_frameLayout, currentFragment);
         }
-        ft.show(currentFragment);
-        ft.commitAllowingStateLoss();
     }
+    public void showMessage(String str){
+        Toast toast=Toast.makeText(this,str,Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP,0,220);
+        toast.show();
+    }
+
+
 }
