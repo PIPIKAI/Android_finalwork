@@ -19,7 +19,7 @@ public class jdbcc {
     private static final String pwd = "1234";
     private static Connection conn=null;
     private static PreparedStatement stmt=null;
-    private static USER data  =null;
+    public static USER data  =null;
     /**
      * 连接数据库
      * @return
@@ -99,9 +99,10 @@ public class jdbcc {
                 String pass = rs.getString("password");
                 int gola = rs.getInt("goaldays");
                 int daily = rs.getInt("daily");
+                int had=rs.getInt("had");
                 res = true;
                 System.out.println("登陆成功！~");
-                data=new USER(gola,daily,us,pass);
+                data=new USER(gola,daily,us,pass,had);
                 return true;
             }
         }
@@ -130,12 +131,13 @@ public class jdbcc {
                 return false;// 用户名已存在时
             }
 
-            String sql="INSERT INTO USER (username,PASSWORD,goaldays,daily) VALUES (?,?,?,?)";
+            String sql="INSERT INTO USER (username,PASSWORD,goaldays,daily,had) VALUES (?,?,?,?,?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1,us);
             stmt.setString(2,pa);
             stmt.setInt(3,Integer.valueOf(gola));
             stmt.setInt(4,Integer.valueOf(daily));
+            stmt.setInt(5,0);
             stmt.executeUpdate();
             System.out.println("注册成功(*￣︶￣)");
             return true;

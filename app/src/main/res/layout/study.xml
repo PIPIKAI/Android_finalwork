@@ -90,7 +90,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="76dp"
+        android:layout_height="152dp"
         android:background="@color/grave">
 
         <Button
@@ -103,7 +103,6 @@
             android:text="认识" />
 
         <Button
-            android:background="@color/write"
             android:id="@+id/unknow"
             android:layout_width="122dp"
             android:layout_height="wrap_content"
@@ -113,20 +112,34 @@
             android:layout_marginRight="30dp"
             android:layout_toEndOf="@+id/know"
             android:layout_toRightOf="@+id/know"
+            android:background="@color/write"
             android:text="不认识" />
 
         <ProgressBar
             android:id="@+id/progressBar2"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
+            android:layout_height="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="60dp"
+            android:max="100"
             android:progress="0"
             android:progressBackgroundTint="@color/write"
             android:progressBackgroundTintMode="src_atop"
-            android:progressTint="@color/theme"
-            android:max="100"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/know"
-            android:layout_marginTop="13dp" />
+            android:progressTint="@color/theme" />
+
+        <TextView
+            android:id="@+id/learn"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="60dp"
+            android:text=""
+            android:textColor="@color/theme"
+            android:textSize="9dp" />
 
     </RelativeLayout>
+
 </LinearLayout>

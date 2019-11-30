@@ -2,16 +2,17 @@ package com.data;
 
 public class USER {
 
-    private int gola,now;
+    private int gola,now,had;
     private String username;
     private String password;
 
     public USER() {
     }
 
-    public USER(int gola, int now, String username, String password) {
+    public USER(int gola, int now, String username, String password,int had) {
         this.gola = gola;
         this.now = now;
+        this.had=had;
         this.username = username;
         this.password = password;
     }
@@ -42,6 +43,14 @@ public class USER {
 
     public String getPassword() {
         return password;
+    }
+
+    public int getHad() {
+        return had;
+    }
+
+    public void setHad(int had) {
+        this.had = had;
     }
 
     public void setPassword(String password) {

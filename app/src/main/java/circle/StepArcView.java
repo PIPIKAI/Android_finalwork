@@ -22,7 +22,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.data.USER;
 import com.evan.demo.bottomnavigationdemo.R;
+import com.jdbcmysql.jdbcc;
 
 import java.util.logging.Logger;
 
@@ -54,7 +56,8 @@ public class StepArcView extends View {
     /**
      * 步数
      */
-    private String stepNumber = "88";
+    private USER data= jdbcc.data;
+    private String stepNumber =String.valueOf( data.getGola()-data.getHad());
     /**
      * 开始绘制圆弧的角度
      */
@@ -75,7 +78,7 @@ public class StepArcView extends View {
     private PointF point;
     private float centerX;
     private Bitmap bitmap;
-    private int totalStepNum=160;
+    private int totalStepNum=data.getGola();
 
     /**
      * 要绘制的三角形指示器的半径

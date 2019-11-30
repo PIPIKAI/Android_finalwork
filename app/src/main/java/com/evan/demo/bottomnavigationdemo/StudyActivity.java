@@ -26,14 +26,14 @@ import java.util.Map;
 public class StudyActivity extends AppCompatActivity {
     private ResultSet rs=null;
     private Button known,unknown;
-    private TextView word,mean,invisbtxt;
+    private TextView word,mean,invisbtxt,learn;
     private RelativeLayout touch;
     private ImageButton back;
     private  Connection conn=null;
     private  PreparedStatement stmt=null;
     private List<String[]> bk=null;
     private ProgressBar process =null;
-    private int id=-1,finised=0,num=10;
+    private int id=-1,finised=0,num=jdbcc.data.getNow();
     private USER data=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,7 @@ public class StudyActivity extends AppCompatActivity {
         unknown=(Button) super.findViewById(R.id.unknow);
         word=(TextView) super.findViewById(R.id.word);
         invisbtxt=(TextView) super.findViewById(R.id.clicktxt);
+        learn=(TextView)super.findViewById(R.id.learn);
         mean= (TextView) super.findViewById(R.id.transition);
         touch=(RelativeLayout) super.findViewById(R.id.toucharea);
         process=(ProgressBar) super.findViewById(R.id.progressBar2) ;
@@ -69,6 +70,7 @@ public class StudyActivity extends AppCompatActivity {
     }
     private void  init(){
         ++id;
+        learn.setText("已学: "+String.valueOf(finised)+"/"+String.valueOf(num));
         int doen=(finised*100/num);
         System.out.println(doen);
         process.setProgress(doen);
@@ -83,6 +85,7 @@ public class StudyActivity extends AppCompatActivity {
             ++finised;
             if(finised>=num){
                 showMessage("完成了！");
+                jdbcc.data.setHad(jdbcc.data.getHad()-1);
                 StudyActivity.this.finish();
                 return ;
             }
@@ -92,8 +95,9 @@ public class StudyActivity extends AppCompatActivity {
     private class OnClickListener2 implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            init();
+
             String map1[]=bk.get(id);
+            init();
             bk.add(map1);
 
         }
