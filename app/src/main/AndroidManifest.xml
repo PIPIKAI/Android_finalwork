@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/kkremeber"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/kkremeber"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -21,6 +21,7 @@
         <activity android:name=".MenuActivity" android:label="@string/app_name" />
         <activity android:name=".StudyActivity" android:label="" />
         <activity android:name=".RegisterActivity" android:label="" />
+        <activity android:name=".utils.ReadArticle" android:label="" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

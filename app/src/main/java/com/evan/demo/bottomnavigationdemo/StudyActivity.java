@@ -34,7 +34,7 @@ public class StudyActivity extends AppCompatActivity {
     private List<String[]> bk=null;
     private ProgressBar process =null;
     private int id=-1,finised=0,num=jdbcc.data.getNow();
-    private USER data=null;
+    private USER data=jdbcc.data;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,14 +79,33 @@ public class StudyActivity extends AppCompatActivity {
         word.setText(bk.get(id)[0]);
         mean.setText(bk.get(id)[1]);
     }
+    private void woked(){
+        showMessage("完成了！");
+        try {
+            Thread.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                jdbcc.updatehad(data.getHad()+1,data.getUsername());
+            }
+        }).start();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        jdbcc.data.setHad(jdbcc.data.getHad()+1);
+        StudyActivity.this.finish();
+    }
     protected class OnClickListener1 implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             ++finised;
             if(finised>=num){
-                showMessage("完成了！");
-                jdbcc.data.setHad(jdbcc.data.getHad()-1);
-                StudyActivity.this.finish();
+                woked();
                 return ;
             }
             init();

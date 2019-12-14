@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.data.USER;
+import com.data.Word;
 
 public class jdbcc {
     private static final String driver = "com.mysql.jdbc.Driver";
@@ -81,6 +82,57 @@ public class jdbcc {
         return res;
     }
     /**
+     * 从数据库获得文章标题
+     * @return
+     */
+    public static List<String> searchTitle() {
+        List<String> res = new ArrayList<>();
+        conn = connection();
+        String sql="SELECT title FROM article ";
+        try {
+            stmt = conn.prepareStatement(sql);
+            System.out.println(sql);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                String title=rs.getString("title");
+                res.add(title);
+                System.out.println("title: "+title);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+        return res;
+    }
+    /**
+     * 从数据库获得文章
+     * @return
+     */
+    public static String searchArticle(String title) {
+        String res = "";
+        conn = connection();
+        String sql="SELECT * FROM article  WHERE title LIKE ?";
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1,title);
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                String article=rs.getString("articles");
+                res=article;
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+        return res;
+    }
+    /**
      * 登录
      * @return
      */
@@ -116,6 +168,57 @@ public class jdbcc {
 
     }
     /**
+     * 查找单词
+     * @return
+     */
+    public static List<Word> searchwords(String message) {
+        List<Word> res = new ArrayList<>();
+        try{
+            conn = connection();
+            String sql="SELECT * FROM enwords  WHERE word  LIKE ? OR translation LIKE ? LIMIT 0,100000";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1,'%'+message+'%');
+            stmt.setString(2,'%'+message+'%');
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("查找成功(*￣︶￣)");
+            while (rs.next()){
+                String word=rs.getString("word");
+                String trans=rs.getString("translation");
+                Word map1=new Word(word,trans);
+                res.add(map1);
+                System.out.println("word: "+word+"   trans： "+trans);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+        return  res;
+    }
+    /**
+     * 修改已学天数
+     * @return
+     */
+    public static void updatehad(int hads,String username) {
+        boolean res=false;
+        try{
+            conn = connection();
+            String sql="UPDATE  USER SET had= ? WHERE username= ? ";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1,hads);
+            stmt.setString(2,username);
+            stmt.executeUpdate();
+            System.out.println("学习++成功(*￣︶￣)");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            close();
+        }
+    }
+    /**
      * 添加用户到数据库（注册）
      * @return
      */
@@ -123,7 +226,6 @@ public class jdbcc {
         boolean res=false;
         try{
             conn = connection();
-
             stmt = conn.prepareStatement("SELECT * FROM USER WHERE username = ? ");
             stmt.setString(1,us);
             ResultSet rs = stmt.executeQuery();
@@ -157,6 +259,11 @@ public class jdbcc {
     public USER getData(){
         return this.data;
     }
+
+
+
+
+
 
 
 }

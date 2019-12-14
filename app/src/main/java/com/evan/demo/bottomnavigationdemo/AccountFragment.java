@@ -8,10 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * @author Evan_zch
- * @date 2018/8/23 20:41
- */
+
 public class AccountFragment extends Fragment {
 
     @Nullable
